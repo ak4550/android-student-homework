@@ -49,6 +49,7 @@ public class SigninActivity extends AppCompatActivity {
         }else{
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            this.finish();
         }
     }
 
@@ -66,7 +67,7 @@ public class SigninActivity extends AppCompatActivity {
 
                   Intent intent = new Intent(SigninActivity.this, MainActivity.class);
                   startActivity(intent);
-//                finish();
+                  finish();
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check

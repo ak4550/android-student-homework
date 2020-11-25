@@ -1,5 +1,6 @@
 package co.ak.studentshomework;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 public class HomeFragment extends Fragment {
 
     private FloatingActionButton floatingAddBtn;
+    private Context context;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -25,17 +27,13 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        floatingAddBtn.setOnClickListener((v) ->{
-            Toast.makeText(getActivity(), "Clicked", Toast.LENGTH_SHORT).show();
-        });
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        context = container.getContext();
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
@@ -43,5 +41,8 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         floatingAddBtn = view.findViewById(R.id.floating_add_btn);
+        floatingAddBtn.setOnClickListener((v) ->{
+            Toast.makeText(context, "fuck you", Toast.LENGTH_SHORT).show();
+        });
     }
 }
