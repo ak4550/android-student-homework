@@ -10,6 +10,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.os.Handler;
 import android.util.Log;
@@ -38,6 +40,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -55,9 +58,10 @@ public class AddingProblemFragment extends Fragment {
     private Button chooseImageBtn, submitBtn;
     private ImageView problemImageView;
     private Uri mImageUri;
-
+    private CustomAlertDialog customAlertDialog;
     private StorageReference storageReference;
     private StorageReference fileReference;
+    private NavController navController;
 
     public AddingProblemFragment() {
         // Required empty public constructor
@@ -86,6 +90,7 @@ public class AddingProblemFragment extends Fragment {
         chooseImageBtn = view.findViewById(R.id.add_problem_choose_image_btn);
         submitBtn = view.findViewById(R.id.add_problem_submit_btn);
         problemImageView = view.findViewById(R.id.add_problem_imageview);
+        navController = Navigation.findNavController(view);
 
         storageReference = FirebaseStorage.getInstance().getReference("images");
 
@@ -94,6 +99,8 @@ public class AddingProblemFragment extends Fragment {
         });
 
         submitBtn.setOnClickListener((v) ->{
+            customAlertDialog = new CustomAlertDialog(context, "Uploading...");
+            customAlertDialog.showDialog();
              uploadToFirebase();
             Toast.makeText(context, "submit button", Toast.LENGTH_SHORT).show();
         });
@@ -129,9 +136,14 @@ public class AddingProblemFragment extends Fragment {
 //        return mime.getMimeTypeFromExtension(cr.getType(uri));
 
         String imageUri = uri.toString();
+
+
         Log.d(TAG, "getFileExtension: toString()" + imageUri);
         Log.d(TAG, "getFileExtension: getEncodedPath()" + uri.getEncodedPath());
         Log.d(TAG, "getFileExtension: getPath()" + uri.getPath());
+        Log.d(TAG, "getFileExtension: uri parse " + Uri.parse(imageUri));
+        Log.d(TAG, "getFileExtension: getlastpathsegment " + uri.getLastPathSegment());
+        Log.d(TAG, "getFileExtension: new file " + Uri.parse(String.valueOf(new File(imageUri).toURI())));
        // return imageUri.substring(imageUri.lastIndexOf('.'));
         return ".jpg";
     }
@@ -213,6 +225,9 @@ public class AddingProblemFragment extends Fragment {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(context, "victory", Toast.LENGTH_SHORT).show();
+                                    customAlertDialog.hideDialog();
+                                    navController.navigate(R.id.action_addingProblemFragment_to_homeFragment);
+
                                 }
                             });
                 }else{

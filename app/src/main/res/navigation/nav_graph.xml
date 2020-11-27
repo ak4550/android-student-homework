@@ -11,7 +11,8 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_addingProblemFragment"
-            app:destination="@id/addingProblemFragment" />
+            app:destination="@id/addingProblemFragment"
+            app:launchSingleTop="true" />
     </fragment>
     <fragment
         android:id="@+id/addingProblemFragment"
@@ -20,6 +21,10 @@
         tools:layout="@layout/fragment_adding_problem">
         <action
             android:id="@+id/action_addingProblemFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:enterAnim="@anim/fui_slide_out_left"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/addingProblemFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>
