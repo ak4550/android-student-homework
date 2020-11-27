@@ -127,9 +127,13 @@ public class AddingProblemFragment extends Fragment {
 //        ContentResolver cr = context.getContentResolver();
 //        MimeTypeMap mime = MimeTypeMap.getSingleton();
 //        return mime.getMimeTypeFromExtension(cr.getType(uri));
+
         String imageUri = uri.toString();
-        Log.d(TAG, "getFileExtension: " + imageUri);
-        return imageUri.substring(imageUri.lastIndexOf('.'));
+        Log.d(TAG, "getFileExtension: toString()" + imageUri);
+        Log.d(TAG, "getFileExtension: getEncodedPath()" + uri.getEncodedPath());
+        Log.d(TAG, "getFileExtension: getPath()" + uri.getPath());
+       // return imageUri.substring(imageUri.lastIndexOf('.'));
+        return ".jpg";
     }
 
     private void uploadToFirebase(){
@@ -156,39 +160,14 @@ public class AddingProblemFragment extends Fragment {
 //            }else{
 //                homework.setImageUrl(getImageUrl());
 //            }
-            homework.setImageUrl(getImageUrl());
 
-
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-            databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                        // this isn't pointing to user id could be a error check out
-                        databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(String.valueOf(databaseReference.push().getKey())).setValue(homework)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Toast.makeText(context, "victory", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                    }else{
-                        databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child(String.valueOf(databaseReference.push().getKey())).setValue(homework);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
+            getImageUrl(homework);
 
 
         }
     }
 
-    private String getImageUrl(){
+    private void getImageUrl(HomeworkModel homeworkModel){
 
         final String[] imageUrl = new String[1];
 
@@ -201,6 +180,8 @@ public class AddingProblemFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         imageUrl[0] = uri.toString();
+                        homeworkModel.setImageUrl(String.valueOf(uri));
+                        updateFirebaseDatabase(homeworkModel);
                         Log.d(TAG, "onSuccess: " + uri.toString());
                     }
                 });
@@ -216,7 +197,35 @@ public class AddingProblemFragment extends Fragment {
         });
 
         Toast.makeText(context, imageUrl[0], Toast.LENGTH_SHORT).show();
-        
-        return imageUrl[0];
+
+       // return imageUrl[0];
     }
+
+    private void updateFirebaseDatabase(HomeworkModel model) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                    // this isn't pointing to user id could be a error check out
+                    databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(String.valueOf(databaseReference.push().getKey())).setValue(model)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(context, "victory", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                }else{
+                    databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child(String.valueOf(databaseReference.push().getKey())).setValue(model);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
 }
