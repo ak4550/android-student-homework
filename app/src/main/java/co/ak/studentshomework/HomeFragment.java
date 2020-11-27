@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 
 public class HomeFragment extends Fragment {
@@ -43,6 +46,8 @@ public class HomeFragment extends Fragment {
         floatingAddBtn = view.findViewById(R.id.floating_add_btn);
         floatingAddBtn.setOnClickListener((v) ->{
             Toast.makeText(context, "fuck you", Toast.LENGTH_SHORT).show();
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.action_homeFragment_to_addingProblemFragment);
         });
     }
 }

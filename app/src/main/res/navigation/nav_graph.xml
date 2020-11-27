@@ -8,5 +8,18 @@
         android:id="@+id/homeFragment"
         android:name="co.ak.studentshomework.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_addingProblemFragment"
+            app:destination="@id/addingProblemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addingProblemFragment"
+        android:name="co.ak.studentshomework.AddingProblemFragment"
+        android:label="fragment_adding_problem"
+        tools:layout="@layout/fragment_adding_problem">
+        <action
+            android:id="@+id/action_addingProblemFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
