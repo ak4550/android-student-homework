@@ -11,8 +11,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +19,8 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.firebase.ui.database.SnapshotParser;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 
 public class HomeFragment extends Fragment {
@@ -72,27 +63,27 @@ public class HomeFragment extends Fragment {
 
     private void setUpRecyclerView(){
 
-        
-        FirebaseRecyclerOptions<HomeworkModel> options =
-                new FirebaseRecyclerOptions.Builder<HomeworkModel>()
+
+        FirebaseRecyclerOptions<PostModel> options =
+                new FirebaseRecyclerOptions.Builder<PostModel>()
                 .setQuery(FirebaseDatabase.getInstance()
-                        .getReference("users"), HomeworkModel.class)
+                        .getReference("Posts"), PostModel.class)
                 .build();
 
 
         FirebaseRecyclerAdapter adapter =
-                new FirebaseRecyclerAdapter<HomeworkModel, HomeRecyclerViewHolder>(options){
+                new FirebaseRecyclerAdapter<PostModel, HomeRecyclerViewHolder>(options){
 
                     @NonNull
                     @Override
                     public HomeRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                         View view = LayoutInflater.from(context)
-                                .inflate(R.layout.home_recycler_view_item, null, false);
+                                .inflate(R.layout.home_recycler_view_item, parent, false);
                         return new HomeRecyclerViewHolder(view);
                     }
 
                     @Override
-                    protected void onBindViewHolder(@NonNull HomeRecyclerViewHolder holder, int position, @NonNull HomeworkModel model) {
+                    protected void onBindViewHolder(@NonNull HomeRecyclerViewHolder holder, int position, @NonNull PostModel model) {
                         Glide.with(context)
                                 .load(model.getImageUrl())
                                 .into(holder.homeImage);

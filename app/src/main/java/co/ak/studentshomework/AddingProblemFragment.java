@@ -1,9 +1,7 @@
 package co.ak.studentshomework;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,23 +11,18 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -151,9 +144,9 @@ public class AddingProblemFragment extends Fragment {
     private void uploadToFirebase(){
         if(mImageUri == null){
             Toast.makeText(context, "Please choose an image", Toast.LENGTH_SHORT).show();
-        }/*else if(userProblemTxt.getText().toString().trim().equals("")){
+        }else if(userProblemTxt.getText().toString().trim().equals("")){
             Toast.makeText(context, "Please enter the problem description", Toast.LENGTH_SHORT).show();
-        }*/else{
+        }else{
             // TODO: 25-11-2020 upload file to firebase
 
 
@@ -163,7 +156,7 @@ public class AddingProblemFragment extends Fragment {
             String stringDate = date.format(calendar.getTime());
             String stringTime = time.format(calendar.getTime());
 
-            HomeworkModel homework = new HomeworkModel();
+            PostModel homework = new PostModel();
             homework.setDate(stringDate); // set date
             homework.setTimeStamp(stringTime);  // set time
             homework.setDescription(userProblemTxt.getText().toString());  // set description
@@ -179,7 +172,7 @@ public class AddingProblemFragment extends Fragment {
         }
     }
 
-    private void getImageUrl(HomeworkModel homeworkModel){
+    private void getImageUrl(PostModel postModel){
 
         final String[] imageUrl = new String[1];
 
@@ -192,8 +185,8 @@ public class AddingProblemFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         imageUrl[0] = uri.toString();
-                        homeworkModel.setImageUrl(String.valueOf(uri));
-                        updateFirebaseDatabase(homeworkModel);
+                        postModel.setImageUrl(String.valueOf(uri));
+                        updateFirebaseDatabase(postModel);
                         Log.d(TAG, "onSuccess: " + uri.toString());
                     }
                 });
@@ -213,27 +206,30 @@ public class AddingProblemFragment extends Fragment {
        // return imageUrl[0];
     }
 
-    private void updateFirebaseDatabase(HomeworkModel model) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void updateFirebaseDatabase(PostModel model) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        databaseReference.child("Posts").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                    // this isn't pointing to user id could be a error check out
-                    databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(String.valueOf(databaseReference.push().getKey())).setValue(model)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(context, "victory", Toast.LENGTH_SHORT).show();
-                                    customAlertDialog.hideDialog();
-                                    navController.navigate(R.id.action_addingProblemFragment_to_homeFragment);
-
-                                }
-                            });
-                }else{
-                    databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .child(String.valueOf(databaseReference.push().getKey())).setValue(model);
-                }
+                model.setUserId(FirebaseAuth.getInstance().getUid());
+                databaseReference.child(databaseReference.push().getKey()).setValue(model);
+//                if(snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+//
+//                    databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(String.valueOf(databaseReference.push().getKey())).setValue(model)
+//                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void aVoid) {
+//                                    Toast.makeText(context, "victory", Toast.LENGTH_SHORT).show();
+//                                    customAlertDialog.hideDialog();
+//                                    navController.navigate(R.id.action_addingProblemFragment_to_homeFragment);
+//
+//                                }
+//                            });
+//                }else{
+//                    databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                            .child(String.valueOf(databaseReference.push().getKey())).setValue(model);
+//                }
             }
 
             @Override

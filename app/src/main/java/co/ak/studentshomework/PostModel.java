@@ -1,13 +1,14 @@
 package co.ak.studentshomework;
 
-public class HomeworkModel {
+public class PostModel {
     private String date;
     private String imageUrl;
     private String status = "unsolved";
     private String description;
     private String timeStamp;
+    private String userId;
 
-    public HomeworkModel() {
+    public PostModel() {
     }
 
     public String getDate() {
@@ -48,5 +49,13 @@ public class HomeworkModel {
 
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
