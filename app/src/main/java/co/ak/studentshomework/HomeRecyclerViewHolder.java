@@ -14,8 +14,8 @@ public class HomeRecyclerViewHolder extends RecyclerView.ViewHolder{
         super(itemView);
         homeImage = itemView.findViewById(R.id.home_item_image_view);
         dateText = itemView.findViewById(R.id.home_item_date_time);
-        descriptionText = itemView.findViewById(R.id.home_item_comment);
-        commentText = itemView.findViewById(R.id.home_item_description);
+        descriptionText = itemView.findViewById(R.id.home_item_description);
+        commentText = itemView.findViewById(R.id.home_item_comment);
 
     }
 }

@@ -93,9 +93,17 @@ public class AddingProblemFragment extends Fragment {
 
         submitBtn.setOnClickListener((v) ->{
             customAlertDialog = new CustomAlertDialog(context, "Uploading...");
-            customAlertDialog.showDialog();
-             uploadToFirebase();
-            Toast.makeText(context, "submit button", Toast.LENGTH_SHORT).show();
+
+            if(mImageUri == null){
+                Toast.makeText(context, "Please choose an image", Toast.LENGTH_SHORT).show();
+            }else if(userProblemTxt.getText().toString().trim().equals("")){
+                Toast.makeText(context, "Please enter the description for your problem", Toast.LENGTH_SHORT).show();
+            }else{
+                customAlertDialog.showDialog();
+                uploadToFirebase();
+                Toast.makeText(context, "submit button", Toast.LENGTH_SHORT).show();
+            }
+
         });
     }
 
@@ -142,11 +150,7 @@ public class AddingProblemFragment extends Fragment {
     }
 
     private void uploadToFirebase(){
-        if(mImageUri == null){
-            Toast.makeText(context, "Please choose an image", Toast.LENGTH_SHORT).show();
-        }else if(userProblemTxt.getText().toString().trim().equals("")){
-            Toast.makeText(context, "Please enter the problem description", Toast.LENGTH_SHORT).show();
-        }else{
+
             // TODO: 25-11-2020 upload file to firebase
 
 
@@ -169,7 +173,7 @@ public class AddingProblemFragment extends Fragment {
             getImageUrl(homework);
 
 
-        }
+
     }
 
     private void getImageUrl(PostModel postModel){
@@ -207,13 +211,18 @@ public class AddingProblemFragment extends Fragment {
     }
 
     private void updateFirebaseDatabase(PostModel model) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        databaseReference.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-        databaseReference.child("Posts").addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference databaseReferenceUsers = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReferencePosts = FirebaseDatabase.getInstance().getReference("Posts");
+        databaseReferenceUsers.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        databaseReferencePosts.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String postId = databaseReferencePosts.push().getKey();
                 model.setUserId(FirebaseAuth.getInstance().getUid());
-                databaseReference.child(databaseReference.push().getKey()).setValue(model);
+                model.setPostId(postId);
+                databaseReferencePosts.child(postId).setValue(model);
+                customAlertDialog.hideDialog();
+                Log.d(TAG, "onDataChange: victory");
 //                if(snapshot.hasChild(FirebaseAuth.getInstance().getCurrentUser().getUid())){
 //
 //                    databaseReference.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(String.valueOf(databaseReference.push().getKey())).setValue(model)

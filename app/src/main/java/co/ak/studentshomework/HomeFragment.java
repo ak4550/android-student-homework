@@ -22,6 +22,8 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
 
+import co.ak.studentshomework.Interfaces.CommentClickListener;
+
 
 public class HomeFragment extends Fragment {
 
@@ -30,6 +32,7 @@ public class HomeFragment extends Fragment {
     private FloatingActionButton floatingAddBtn;
     private RecyclerView recyclerView;
     private Context context;
+    private CommentClickListener commentClickListener;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -89,6 +92,9 @@ public class HomeFragment extends Fragment {
                                 .into(holder.homeImage);
                         holder.descriptionText.setText(String.valueOf(model.getDescription()));
                         holder.dateText.setText(String.valueOf(model.getDate() + " " + model.getTimeStamp()));
+                        holder.commentText.setOnClickListener((v) ->{
+                            Toast.makeText(context, "Comment", Toast.LENGTH_SHORT).show();
+                        });
                     }
                 };
 
