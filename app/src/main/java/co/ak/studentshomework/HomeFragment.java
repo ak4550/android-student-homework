@@ -1,6 +1,7 @@
 package co.ak.studentshomework;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ public class HomeFragment extends Fragment {
     private static final String TAG = "HomeFragment";
 
     private FloatingActionButton floatingAddBtn;
+    private NavController navController;
     private RecyclerView recyclerView;
     private Context context;
     private CommentClickListener commentClickListener;
@@ -54,11 +56,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(view);
         floatingAddBtn = view.findViewById(R.id.floating_add_btn);
         recyclerView = view.findViewById(R.id.home_recycler_view);
         floatingAddBtn.setOnClickListener((v) ->{
             Toast.makeText(context, "fuck you", Toast.LENGTH_SHORT).show();
-            NavController navController = Navigation.findNavController(view);
+
             navController.navigate(R.id.action_homeFragment_to_addingProblemFragment);
         });
         setUpRecyclerView();
@@ -92,8 +95,13 @@ public class HomeFragment extends Fragment {
                                 .into(holder.homeImage);
                         holder.descriptionText.setText(String.valueOf(model.getDescription()));
                         holder.dateText.setText(String.valueOf(model.getDate() + " " + model.getTimeStamp()));
-                        holder.commentText.setOnClickListener((v) ->{
+                        holder.commentText.setOnClickListener((v) -> {
                             Toast.makeText(context, "Comment", Toast.LENGTH_SHORT).show();
+                            //navController.navigate(R.id.action_homeFragment_to_commentFragment);
+                            HomeFragmentDirections.ActionHomeFragmentToCommentFragment action =
+                                    HomeFragmentDirections.actionHomeFragmentToCommentFragment();
+                            action.setHomeWorkExtra(model);
+                            navController.navigate(action);
                         });
                     }
                 };

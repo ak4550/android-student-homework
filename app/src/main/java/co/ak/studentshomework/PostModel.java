@@ -1,6 +1,9 @@
 package co.ak.studentshomework;
 
-public class PostModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class PostModel implements Parcelable {
     private String date;
     private String imageUrl;
     private String status = "unsolved";
@@ -8,6 +11,28 @@ public class PostModel {
     private String timeStamp;
     private String userId;
     private String postId;
+
+    public static final Creator<PostModel> CREATOR = new Creator<PostModel>() {
+        @Override
+        public PostModel createFromParcel(Parcel in) {
+            return new PostModel(in);
+        }
+
+        @Override
+        public PostModel[] newArray(int size) {
+            return new PostModel[size];
+        }
+    };
+
+    protected PostModel(Parcel in) {
+        date = in.readString();
+        imageUrl = in.readString();
+        status = in.readString();
+        description = in.readString();
+        timeStamp = in.readString();
+        userId = in.readString();
+        postId = in.readString();
+    }
 
     public String getPostId() {
         return postId;
@@ -66,5 +91,21 @@ public class PostModel {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(date);
+        dest.writeString(imageUrl);
+        dest.writeString(status);
+        dest.writeString(description);
+        dest.writeString(timeStamp);
+        dest.writeString(userId);
+        dest.writeString(postId);
     }
 }

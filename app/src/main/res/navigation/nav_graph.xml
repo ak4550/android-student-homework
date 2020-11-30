@@ -8,11 +8,20 @@
         android:id="@+id/homeFragment"
         android:name="co.ak.studentshomework.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_addingProblemFragment"
             app:destination="@id/addingProblemFragment"
             app:launchSingleTop="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_commentFragment"
+            app:destination="@id/commentFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_userPostsFragment"
+            app:destination="@id/userPostsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_userProfileFragment"
+            app:destination="@id/userProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/addingProblemFragment"
@@ -27,4 +36,28 @@
             app:popUpTo="@id/addingProblemFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/commentFragment"
+        android:name="co.ak.studentshomework.CommentFragment"
+        android:label="fragment_comment"
+        tools:layout="@layout/fragment_comment">
+        <action
+            android:id="@+id/action_commentFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <argument
+            android:name="homeWorkExtra"
+            android:defaultValue="@null"
+            app:argType="co.ak.studentshomework.PostModel"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/userPostsFragment"
+        android:name="co.ak.studentshomework.UserPostsFragment"
+        android:label="fragment_user_posts"
+        tools:layout="@layout/fragment_user_posts" />
+    <fragment
+        android:id="@+id/userProfileFragment"
+        android:name="co.ak.studentshomework.UserProfileFragment"
+        android:label="fragment_user_profile"
+        tools:layout="@layout/fragment_user_profile" />
 </navigation>
